@@ -1,53 +1,54 @@
 // Ikigai 4-circle Venn diagram
-// Layout: 4 circles in a 2×2 arrangement
+// Layout: 4 circles in a 2×2 arrangement, 500×500 viewBox
 // Love (top-left), Good At (top-right), Paid For (bottom-right), World Needs (bottom-left)
+// Adjacent centers 150px apart, r=160 → 53% overlap ratio, clear petal regions
 
 const CIRCLES = [
   {
     key: 'love',
-    cx: 145, cy: 145, r: 105,
+    cx: 175, cy: 175, r: 160,
     color: '#FF6B8A',
     label: '❤️ LOVE',
-    labelX: 105, labelY: 110,
+    labelX: 122, labelY: 132,
   },
   {
     key: 'good_at',
-    cx: 255, cy: 145, r: 105,
-    color: '#4ECDC4',
+    cx: 325, cy: 175, r: 160,
+    color: '#FFB347',
     label: '⭐ GOOD AT',
-    labelX: 292, labelY: 110,
+    labelX: 378, labelY: 132,
   },
   {
     key: 'paid_for',
-    cx: 255, cy: 255, r: 105,
-    color: '#FFD93D',
+    cx: 325, cy: 325, r: 160,
+    color: '#4ECDC4',
     label: '💡 PAID FOR',
-    labelX: 292, labelY: 298,
+    labelX: 378, labelY: 376,
   },
   {
     key: 'world_needs',
-    cx: 145, cy: 255, r: 105,
-    color: '#96CEB4',
+    cx: 175, cy: 325, r: 160,
+    color: '#9B59B6',
     label: '🌍 WORLD',
-    labelX: 105, labelY: 298,
+    labelX: 122, labelY: 376,
   },
 ]
 
 const INTERSECTIONS = [
-  { x: 200, y: 118, label: 'PASSION', size: 10 },
-  { x: 282, y: 200, label: 'PROFESSION', size: 10 },
-  { x: 200, y: 282, label: 'VOCATION', size: 10 },
-  { x: 118, y: 200, label: 'MISSION', size: 10 },
+  { x: 250, y: 118, label: 'PASSION' },
+  { x: 382, y: 250, label: 'PROFESSION' },
+  { x: 250, y: 382, label: 'VOCATION' },
+  { x: 118, y: 250, label: 'MISSION' },
 ]
 
-export default function IkigaiDiagram({ completedSections = [], size = 400, showLabels = true, animate = false }) {
+export default function IkigaiDiagram({ completedSections = [], size = 500, showLabels = true, animate = false }) {
   const allDone = completedSections.length === 4
 
   return (
     <div className="ikigai-diagram-wrapper">
       <svg
         className="ikigai-svg"
-        viewBox="0 0 400 400"
+        viewBox="0 0 500 500"
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Ikigai Venn Diagram"
       >
@@ -117,8 +118,8 @@ export default function IkigaiDiagram({ completedSections = [], size = 400, show
               y={inter.y}
               textAnchor="middle"
               fill="white"
-              fillOpacity={allCirclesActive ? 0.5 : 0.15}
-              fontSize="7"
+              fillOpacity={allCirclesActive ? 0.55 : 0.15}
+              fontSize="9"
               fontWeight="700"
               fontFamily="Nunito, sans-serif"
               letterSpacing="0.5"
@@ -133,28 +134,28 @@ export default function IkigaiDiagram({ completedSections = [], size = 400, show
         {allDone ? (
           <>
             <circle
-              cx="200"
-              cy="200"
-              r="22"
+              cx="250"
+              cy="250"
+              r="28"
               fill="white"
-              fillOpacity="0.15"
+              fillOpacity="0.12"
               filter="url(#glow)"
             />
             <circle
-              cx="200"
-              cy="200"
-              r="14"
+              cx="250"
+              cy="250"
+              r="18"
               fill="white"
-              fillOpacity="0.9"
+              fillOpacity="0.95"
               filter="url(#glow)"
               className="ikigai-center-pulse"
             />
             <text
-              x="200"
-              y="204"
+              x="250"
+              y="254"
               textAnchor="middle"
               fill="#0F0F1A"
-              fontSize="7"
+              fontSize="8"
               fontWeight="900"
               fontFamily="Nunito, sans-serif"
               letterSpacing="0.5"
@@ -165,21 +166,21 @@ export default function IkigaiDiagram({ completedSections = [], size = 400, show
         ) : (
           <>
             <circle
-              cx="200"
-              cy="200"
-              r="14"
+              cx="250"
+              cy="250"
+              r="18"
               fill="white"
               fillOpacity={completedSections.length > 0 ? 0.15 : 0.05}
               style={{ transition: 'fill-opacity 0.8s ease' }}
             />
             {showLabels && (
               <text
-                x="200"
-                y="204"
+                x="250"
+                y="254"
                 textAnchor="middle"
                 fill="white"
                 fillOpacity={completedSections.length > 0 ? 0.4 : 0.15}
-                fontSize="7"
+                fontSize="8"
                 fontWeight="800"
                 fontFamily="Nunito, sans-serif"
                 letterSpacing="0.5"

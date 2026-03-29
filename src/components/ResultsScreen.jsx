@@ -3,17 +3,17 @@ import IkigaiDiagram from './IkigaiDiagram.jsx'
 import { generateResults } from '../utils/generateResults.js'
 
 const SECTION_META = {
-  love:        { color: '#FF6B8A', label: 'What You LOVE',        emoji: '❤️', cardType: 'PASSION' },
-  good_at:     { color: '#4ECDC4', label: "What You're GOOD AT",  emoji: '⭐', cardType: 'MASTERY' },
-  world_needs: { color: '#96CEB4', label: 'What the WORLD NEEDS', emoji: '🌍', cardType: 'MISSION' },
-  paid_for:    { color: '#FFD93D', label: 'What You Can Be PAID FOR', emoji: '💡', cardType: 'VOCATION' },
+  love:        { color: '#FF6B8A', label: 'What You LOVE',           emoji: '❤️', cardType: 'PASSION' },
+  good_at:     { color: '#FFB347', label: "What You're GOOD AT",     emoji: '⭐', cardType: 'MASTERY' },
+  world_needs: { color: '#9B59B6', label: 'What the WORLD NEEDS',    emoji: '🌍', cardType: 'MISSION' },
+  paid_for:    { color: '#4ECDC4', label: 'What You Can Be PAID FOR', emoji: '💡', cardType: 'VOCATION' },
 }
 
 const INTERSECTION_META = [
-  { key: 'passion',    label: 'YOUR PASSION',    icon: '🔥', desc: 'Love + Good At', color: '#FF8E9E' },
-  { key: 'mission',    label: 'YOUR MISSION',    icon: '🌱', desc: 'Love + World Needs', color: '#78D8B0' },
-  { key: 'profession', label: 'YOUR PROFESSION', icon: '🏆', desc: 'Good At + Paid For', color: '#45D4CA' },
-  { key: 'vocation',   label: 'YOUR VOCATION',   icon: '💫', desc: 'Paid For + World Needs', color: '#FFB347' },
+  { key: 'passion',    label: 'YOUR PASSION',    icon: '🔥', desc: 'Love + Good At',        color: '#FF8C69' },
+  { key: 'mission',    label: 'YOUR MISSION',    icon: '🌱', desc: 'Love + World Needs',    color: '#C87DD4' },
+  { key: 'profession', label: 'YOUR PROFESSION', icon: '🏆', desc: 'Good At + Paid For',    color: '#7FDBD7' },
+  { key: 'vocation',   label: 'YOUR VOCATION',   icon: '💫', desc: 'Paid For + World Needs', color: '#7BC8C4' },
 ]
 
 function ConfettiPiece({ x, delay, color, size }) {
