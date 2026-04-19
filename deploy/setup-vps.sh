@@ -1,5 +1,5 @@
 #!/bin/bash
-# KaizenFinder VPS Setup Script — w8h8.com
+# KaizenFinder VPS Setup Script — w8h8.com/kaizen
 # Run as root: bash setup-vps.sh
 
 set -e
@@ -11,10 +11,10 @@ NGINX_CONF="/etc/nginx/sites-available/kaizenfinder"
 
 echo "============================================"
 echo "  KaizenFinder VPS Deployment"
-echo "  Domain: $WWW_DOMAIN"
+echo "  URL: https://www.w8h8.com/kaizen"
 echo "============================================"
 
-# 1. Update & install dependencies
+# 1. Install nginx & certbot
 echo "[1/6] Installing nginx & certbot..."
 apt-get update -qq
 apt-get install -y nginx curl certbot python3-certbot-nginx
@@ -29,15 +29,11 @@ curl -fsSL "https://raw.githubusercontent.com/oytuncak/Kaizenfinder/gh-pages/fav
 curl -fsSL "https://raw.githubusercontent.com/oytuncak/Kaizenfinder/gh-pages/assets/index-BTQcnt7M.css" -o assets/index-BTQcnt7M.css
 curl -fsSL "https://raw.githubusercontent.com/oytuncak/Kaizenfinder/gh-pages/assets/index-DbyK_ECN.js" -o assets/index-DbyK_ECN.js
 
-# Fix asset paths (remove /Kaizenfinder/ subpath prefix)
-sed -i 's|/Kaizenfinder/assets/|/assets/|g' index.html
-sed -i 's|/Kaizenfinder/favicon.svg|/favicon.svg|g' index.html
-
 chown -R www-data:www-data "$APP_DIR"
 chmod -R 755 "$APP_DIR"
 echo "  Files ready."
 
-# 3. Configure nginx (HTTP first, certbot will upgrade to HTTPS)
+# 3. Write nginx config
 echo "[3/6] Configuring nginx..."
 cat > "$NGINX_CONF" << 'EOF'
 server {
@@ -45,14 +41,21 @@ server {
     listen [::]:80;
     server_name w8h8.com www.w8h8.com;
 
-    root /var/www/kaizenfinder;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ /index.html;
+    # Redirect /kaizen -> /kaizen/ (trailing slash)
+    location = /kaizen {
+        return 301 /kaizen/;
     }
 
-    location ~* \.(js|css|svg|ico|png|jpg|woff2)$ {
+    # Serve KaizenFinder at /kaizen/
+    location /kaizen/ {
+        alias /var/www/kaizenfinder/;
+        index index.html;
+        try_files $uri $uri/ /kaizen/index.html;
+    }
+
+    # Cache static assets
+    location ~* ^/kaizen/.*\.(js|css|svg|ico|png|jpg|woff2)$ {
+        alias /var/www/kaizenfinder/;
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
@@ -64,13 +67,14 @@ server {
 EOF
 
 ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/kaizenfinder
-rm -f /etc/nginx/sites-enabled/default
+
+# Keep default site if it exists (other sites on the VPS may use it)
 nginx -t
 systemctl enable nginx
 systemctl restart nginx
 echo "  Nginx running on HTTP."
 
-# 4. Obtain SSL certificate
+# 4. SSL certificate
 echo "[4/6] Obtaining SSL certificate..."
 certbot --nginx \
   -d "$DOMAIN" \
@@ -79,19 +83,19 @@ certbot --nginx \
   --agree-tos \
   --email admin@w8h8.com \
   --redirect
-echo "  SSL certificate installed."
+echo "  SSL installed."
 
-# 5. Auto-renew cron
-echo "[5/6] Setting up auto-renewal..."
+# 5. Auto-renew
+echo "[5/6] Setting up SSL auto-renewal..."
 (crontab -l 2>/dev/null; echo "0 3 * * * certbot renew --quiet") | crontab -
 
-# 6. Final reload
+# 6. Reload
 echo "[6/6] Reloading nginx..."
 systemctl reload nginx
 
 echo ""
 echo "============================================"
 echo "  KaizenFinder is LIVE at:"
-echo "  https://www.w8h8.com"
-echo "  https://w8h8.com"
+echo "  https://www.w8h8.com/kaizen"
+echo "  https://w8h8.com/kaizen"
 echo "============================================"
